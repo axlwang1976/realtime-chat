@@ -1,0 +1,17 @@
+.root {
+  width: 500px;
+  margin: auto;
+  position: relative;
+}
+
+.Button {
+  height: 56px;
+  position: absolute !important;
+  right: 0;
+  top: 16px;
+  border-radius: 0 4px 4px 0 !important;
+}
+
+.Icon {
+  margin-left: 10px;
+}

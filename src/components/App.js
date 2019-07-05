@@ -1,7 +1,8 @@
 import React from 'react';
+import Chat from './Chat';
 
 function App() {
-  return <div className="App">App</div>;
+  return <Chat />;
 }
 
 export default App;
