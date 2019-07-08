@@ -6,20 +6,21 @@ import Icon from '@material-ui/core/Icon';
 import styles from '../styles/ChatForm.module.scss';
 
 export default class ChatForm extends Component {
-  state = { msg: '' };
+  state = { msg: '', userName: 'Anonymous' };
 
   handleChange = e => this.setState({ msg: e.target.value });
 
   handleSubmit = e => {
     const { addChat } = this.props;
-    const { msg } = this.state;
+    const { msg, userName } = this.state;
     e.preventDefault();
-    addChat(msg);
+    addChat(msg, userName);
     this.setState({ msg: '' });
   };
 
   render() {
     const { msg } = this.state;
+    const { isSignedIn } = this.props;
     return (
       <form className={styles.root} onSubmit={this.handleSubmit}>
         <TextField
@@ -30,12 +31,14 @@ export default class ChatForm extends Component {
           fullWidth
           onChange={this.handleChange}
           value={msg}
+          name="msg"
         />
         <Button
           type="submit"
           variant="contained"
           color="primary"
           className={styles.Button}
+          disabled={!isSignedIn}
         >
           Send
           <Icon className={styles.Icon}>send</Icon>
@@ -47,4 +50,5 @@ export default class ChatForm extends Component {
 
 ChatForm.propTypes = {
   addChat: PropTypes.func,
+  isSignedIn: PropTypes.bool,
 };
