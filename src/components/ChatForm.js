@@ -6,15 +6,15 @@ import Icon from '@material-ui/core/Icon';
 import styles from '../styles/ChatForm.module.scss';
 
 export default class ChatForm extends Component {
-  state = { msg: '', userName: 'Anonymous' };
+  state = { msg: '' };
 
   handleChange = e => this.setState({ msg: e.target.value });
 
   handleSubmit = e => {
     const { addChat } = this.props;
-    const { msg, userName } = this.state;
+    const { msg } = this.state;
     e.preventDefault();
-    addChat(msg, userName);
+    addChat(msg);
     this.setState({ msg: '' });
   };
 

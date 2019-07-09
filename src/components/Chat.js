@@ -7,7 +7,7 @@ export default class Chat extends Component {
   state = {
     chats: JSON.parse(localStorage.getItem('chats')) || [],
     isSignedIn: null,
-    userName: '',
+    userId: null,
   };
 
   componentDidMount() {
@@ -17,18 +17,21 @@ export default class Chat extends Component {
           clientId:
             '630500604450-2bodr728kpukmk8hm9b291ot595op3rv.apps.googleusercontent.com',
           scope: 'email',
-          fetch_basic_profile: true,
         })
         .then(() => {
           this.auth = window.gapi.auth2.getAuthInstance();
           this.onAuthChange();
           this.auth.isSignedIn.listen(this.onAuthChange);
+          this.auth.currentUser.listen(this.onAuthChange);
         });
     });
   }
 
   onAuthChange = () =>
-    this.setState({ isSignedIn: this.auth.isSignedIn.get() });
+    this.setState({
+      isSignedIn: this.auth.isSignedIn.get(),
+      userId: this.auth.currentUser.get().getId(),
+    });
 
   handleClick = () => {
     const { isSignedIn } = this.state;
@@ -44,24 +47,21 @@ export default class Chat extends Component {
     localStorage.setItem('chats', JSON.stringify(chats));
   };
 
-  addChat = (msg, userName) => {
-    const { chats } = this.state;
+  addChat = msg => {
+    const { chats, userId } = this.state;
     const now = new Date();
     const nowString = `${now.getFullYear()}/${now.getMonth() +
       1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-    const newChat = { msg, createdTime: nowString };
-    this.setState(
-      { chats: [...chats, newChat], userName },
-      this.syncLocalStorage
-    );
+    const newChat = { msg, createdTime: nowString, userId };
+    this.setState({ chats: [...chats, newChat] }, this.syncLocalStorage);
   };
 
   render() {
-    const { chats, isSignedIn, userName } = this.state;
+    const { chats, isSignedIn, userId } = this.state;
     return (
       <>
         <Header isSignedIn={isSignedIn} handleClick={this.handleClick} />
-        <ChatContent chats={chats} userName={userName} />
+        <ChatContent chats={chats} userId={userId} />
         <ChatForm addChat={this.addChat} isSignedIn={isSignedIn} />
       </>
     );
